@@ -45,18 +45,66 @@ Run by `amazon_project.cleaning.clean_data()` (walkthrough: `notebooks/02_data_c
 
 Each stage is completed and approved before the next begins.
 
-## Getting started
+## Setup on your own computer
+The data files are **not** in this repository: `data/raw/` and `data/processed/` are git-ignored. You download the raw file yourself, and the cleaned file is created by running the project's code. Follow these 5 steps in order.
+
+**Before you start:** install **Python 3.13 or newer** and **Git**. Check your Python version with `python --version`.
+
+### Step 1: Get the code
+Download (clone) the repository and go into its folder:
+```
+git clone https://github.com/Adarsh812793/AmazonProject.git
+cd AmazonProject
+```
+
+### Step 2: Install the project
+Create a virtual environment (a private space for this project's packages), switch it on, and install everything:
 ```
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-pip install -e .      # makes `import amazon_project` work in tests and notebooks
+pip install -e .
 ```
-Then:
+- On Mac/Linux, switch it on with `source .venv/bin/activate` instead.
+- When it's on, you'll see `(.venv)` at the start of your terminal line. Switch it on again every time you open a new terminal.
+- `pip install -e .` lets the notebooks and tests use `import amazon_project`.
+
+### Step 3: Add the raw dataset
+1. Download `amazon.csv` from Kaggle.
+2. Put it in the `data/raw/` folder, so its path is exactly **`data/raw/amazon.csv`**. Keep the file name `amazon.csv`.
+3. *(Optional)* Check you have the right file:
+   ```
+   certutil -hashfile data\raw\amazon.csv SHA256
+   ```
+   (On Mac/Linux: `sha256sum data/raw/amazon.csv`.) It should print:
+   ```
+   4ba126c4ba8edd35e62e94ce1c853073d832de380184ab4f5f97d1e314882c77
+   ```
+   A different value means you have a different version of the file.
+
+### Step 4: Create the cleaned dataset
+Run this command once. It reads the raw file, cleans it, and saves the result:
+```
+python -X utf8 -c "from amazon_project.loading import load_raw, save_processed; from amazon_project.cleaning import clean_data; save_processed(clean_data(load_raw()))"
+```
+This creates `data/processed/amazon_clean.csv` (1,351 rows × 21 columns). You can also get the same file by running `notebooks/02_data_cleaning.ipynb` from top to bottom.
+
+### Step 5: Check everything works
+```
+pytest
+```
+All tests should pass. If a test shows as **skipped**, the project couldn't find `data/raw/amazon.csv`, so go back to Step 3.
+
+Then open the notebooks:
+```
+jupyter notebook
+```
+
+### Useful commands
 ```
 pytest              # run tests
-ruff check .        # lint
-ruff format .       # format
+ruff check .        # check code style
+ruff format .       # format code
 jupyter notebook    # open notebooks
 ```
 
