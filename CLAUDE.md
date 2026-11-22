@@ -24,7 +24,9 @@ Rules of engagement:
 - Keep things simple; avoid unnecessary complexity or abstraction.
 - Keep documentation (README, this file, docstrings) current at every stage.
 
-Status: Stage 1 (Project Setup) complete, awaiting approval to start Stage 2 (Data Acquisition).
+Status: Stage 1 (Project Setup) merged. Stage 2 (Data Acquisition) done on branch `stage-2-data-acquisition`, awaiting user's PR/merge and approval before Stage 3.
+
+Git workflow: one branch per stage (`stage-N-topic`); commit there and push; the user opens and merges the PR. Do not install `gh` or open/merge PRs.
 
 ## Structure
 - `data/raw/` — original, immutable source data (never edit in place)
@@ -57,7 +59,7 @@ pip install -e .      # makes `import amazon_project` work in tests and notebook
 - Windows console is cp1252: run scripts with `python -X utf8` when printing `₹`.
 
 ## Data
-File: `amazon.csv` (~4.7 MB, UTF-8). Original copy lives outside the repo (Downloads); it is copied unchanged to `data/raw/` in Stage 2. Profiled read-only during setup (pandas default read).
+File: `amazon.csv` (~4.7 MB, UTF-8). Source: Kaggle. Stored at `data/raw/amazon.csv` (read-only, git-ignored). SHA-256 `4ba126c4ba8edd35e62e94ce1c853073d832de380184ab4f5f97d1e314882c77`. Loaded with `amazon_project.loading.load_raw()`, which reads everything as UTF-8 text with no conversion; missing values therefore appear as empty strings, not NaN (Stage 3 decides how to treat them).
 
 **Shape:** 1,465 rows × 16 columns. Each row is a product paired with its reviews (not a transaction).
 

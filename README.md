@@ -26,7 +26,7 @@ Python 3.13 · pandas · NumPy · Matplotlib · Seaborn · Jupyter Notebook · p
 
 ## Workflow
 1. Project Setup — done
-2. Data Acquisition — in progress
+2. Data Acquisition — done (pending PR merge)
 3. Data Preparation and Cleaning
 4. Exploratory Data Analysis
 5. Data Visualization
