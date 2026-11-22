@@ -9,3 +9,4 @@ data/raw/*
 data/processed/*
 data/external/*
 !data/**/.gitkeep
+*.egg-info/
