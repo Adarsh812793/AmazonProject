@@ -40,6 +40,7 @@ Each stage is completed and approved before the next begins.
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+pip install -e .      # makes `import amazon_project` work in tests and notebooks
 ```
 Then:
 ```

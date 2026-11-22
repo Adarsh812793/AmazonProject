@@ -40,6 +40,7 @@ Status: Stage 1 (Project Setup) complete, awaiting approval to start Stage 2 (Da
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+pip install -e .      # makes `import amazon_project` work in tests and notebooks
 ```
 
 ## Commands
