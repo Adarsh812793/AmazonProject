@@ -38,3 +38,37 @@ def load_raw(path: Path | str = RAW_DATA_PATH) -> pd.DataFrame:
     # keep_default_na=False: do not silently turn text into NaN; we want to
     # see the file exactly as it is and decide about missing values later.
     return pd.read_csv(path, encoding="utf-8", dtype=str, keep_default_na=False)
+
+
+PROCESSED_DATA_PATH = PROJECT_ROOT / "data" / "processed" / "amazon_clean.csv"
+
+
+def save_processed(df: pd.DataFrame, path: Path | str = PROCESSED_DATA_PATH) -> Path:
+    """Write the cleaned DataFrame to CSV (creating the folder if needed)."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False, encoding="utf-8")
+    return path
+
+
+def load_processed(path: Path | str = PROCESSED_DATA_PATH) -> pd.DataFrame:
+    """Read the cleaned CSV and restore the column types lost in CSV.
+
+    CSV stores only text, so we re-apply: ``rating_count`` and ``n_reviews``
+    as nullable/plain integers and ``is_small_category`` as bool. Floats and
+    text are inferred correctly by pandas.
+    """
+    path = Path(path)
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Processed file not found: {path}. Run the cleaning pipeline first."
+        )
+    return pd.read_csv(
+        path,
+        encoding="utf-8",
+        dtype={
+            "rating_count": "Int64",
+            "n_reviews": "int64",
+            "is_small_category": "bool",
+        },
+    )
