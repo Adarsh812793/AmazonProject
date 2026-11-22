@@ -24,7 +24,7 @@ Rules of engagement:
 - Keep things simple; avoid unnecessary complexity or abstraction.
 - Keep documentation (README, this file, docstrings) current at every stage.
 
-Status: Stage 1 (Project Setup) merged. Stage 2 (Data Acquisition) done on branch `stage-2-data-acquisition`, awaiting user's PR/merge and approval before Stage 3.
+Status: Stages 1 and 2 merged. Stage 3 (Data Preparation and Cleaning) done on branch `stage-3-data-cleaning`, awaiting user's PR/merge and approval before Stage 4.
 
 Git workflow: one branch per stage (`stage-N-topic`); commit there and push; the user opens and merges the PR. Do not install `gh` or open/merge PRs.
 
@@ -82,7 +82,16 @@ File: `amazon.csv` (~4.7 MB, UTF-8). Source: Kaggle. Stored at `data/raw/amazon.
 | img_link | Image URL | text | |
 | product_link | Product page URL | text | |
 
-**Known quirks / quality issues (to handle in Stage 3):**
+## Cleaned data (Stage 3)
+`data/processed/amazon_clean.csv` (git-ignored): 1,351 rows (one per `product_id`) × 21 columns. Built by `amazon_project.cleaning.clean_data(load_raw())`, saved/loaded with `save_processed()` / `load_processed()` (which restores dtypes lost in CSV). Decisions made:
+- Price/discount/rating/count columns are numeric (`rating_count` is nullable `Int64`). Missing values stay NaN, never imputed: `rating` 1 missing, `rating_count` 2 missing.
+- Dedup: repeated `product_id`s are the same product scraped from different search pages; keep the row with the highest `rating_count` (ties: first).
+- New columns: `main_category`, `sub_category`, `leaf_category`, `is_small_category` (main category with <5 products: 7 products), `n_reviews` (from `review_id`).
+- Review text columns (`review_title`, `review_content`, `user_name`) remain raw comma-packed text; only IDs split safely. Text analysis is deferred.
+- Validation: no price/rating/discount inconsistencies; outliers deliberately kept for Stage 4.
+- Main categories after dedup: Electronics 490, Home&Kitchen 448, Computers&Accessories 375, OfficeProducts 31, others ≤2.
+
+**Original raw-data quirks (all handled in Stage 3):**
 - All columns load as text (pandas 3 `str`); price, discount, rating and count columns need conversion.
 - Currency is Indian rupees (₹).
 - Missing values: `rating_count` has 2 nulls (`B0B94JPY2N`, `B0BQRJ3C47`); no other nulls.

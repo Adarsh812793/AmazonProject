@@ -24,10 +24,20 @@ Python 3.13 · pandas · NumPy · Matplotlib · Seaborn · Jupyter Notebook · p
 - **Protection:** `data/raw/amazon.csv` is set read-only. Never edit it; all changes go to `data/processed/`.
   To re-set it on Windows: `attrib +R data\raw\amazon.csv`.
 
+## Data cleaning
+Run by `amazon_project.cleaning.clean_data()` (walkthrough: `notebooks/02_data_cleaning.ipynb`). Output: `data/processed/amazon_clean.csv` (git-ignored; 1,351 rows × 21 columns), read back with `amazon_project.loading.load_processed()`.
+
+1. Trim whitespace in text columns.
+2. Convert `discounted_price`, `actual_price` (remove `₹`, commas), `discount_percentage` (remove `%`), `rating`, `rating_count` (remove commas) to numbers. Unconvertible values (the `|` rating, 2 empty `rating_count`) become missing (NaN); nothing is imputed.
+3. Validation found no problems: discounted price ≤ list price, ratings 2.0–5.0, stated discount matches the prices (max gap 0.5 pt, rounding). Outliers are kept for Stage 4.
+4. **Duplicates:** the 114 repeated `product_id`s are the same product scraped from different search pages. Keep one row per product: the one with the highest `rating_count`.
+5. Split `category` into `main_category`, `sub_category`, `leaf_category`; `is_small_category` marks main categories with fewer than 5 products.
+6. **Reviews:** only `review_id`/`user_id` split safely on commas. Review text stays raw; `n_reviews` (count from `review_id`) is added. Text-level review analysis is deferred.
+
 ## Workflow
 1. Project Setup — done
-2. Data Acquisition — done (pending PR merge)
-3. Data Preparation and Cleaning
+2. Data Acquisition — done
+3. Data Preparation and Cleaning — done (pending PR merge)
 4. Exploratory Data Analysis
 5. Data Visualization
 6. Findings and Conclusion

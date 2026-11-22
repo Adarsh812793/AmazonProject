@@ -1,10 +1,14 @@
 import pandas as pd
 
 from amazon_project.cleaning import (
+    add_review_count,
+    clean_data,
     convert_numeric_columns,
     drop_duplicate_products,
     split_category,
+    strip_whitespace,
 )
+from amazon_project.loading import load_processed, save_processed
 
 
 def _raw_sample() -> pd.DataFrame:
@@ -84,3 +88,41 @@ def test_split_category_levels_and_small_flag():
     assert out["sub_category"].tolist() == ["Mobiles", "Audio", "Puzzles"]
     assert out["leaf_category"].tolist() == ["Cables", "Audio", "Puzzles"]
     assert out["is_small_category"].tolist() == [False, False, True]
+
+
+def test_add_review_count_uses_review_ids():
+    df = pd.DataFrame({"review_id": ["R1,R2,R3", "R9"]})
+    assert add_review_count(df)["n_reviews"].tolist() == [3, 1]
+
+
+def test_strip_whitespace_only_touches_text():
+    df = pd.DataFrame({"name": ["  a ", "b"], "price": [1.0, 2.0]})
+    out = strip_whitespace(df)
+    assert out["name"].tolist() == ["a", "b"]
+    assert out["price"].tolist() == [1.0, 2.0]
+
+
+def test_clean_data_end_to_end_and_csv_round_trip(tmp_path):
+    raw = pd.DataFrame(
+        {
+            "product_id": ["A", "A", "B"],
+            "category": ["Electronics|Cables", "Electronics|Cables", "Toys|Games"],
+            "discounted_price": ["₹100", "₹100", "₹50"],
+            "actual_price": ["₹200", "₹200", "₹50"],
+            "discount_percentage": ["50%", "50%", "0%"],
+            "rating": ["4.0", "4.0", "|"],
+            "rating_count": ["1,000", "1,001", ""],
+            "review_id": ["R1,R2", "R1,R2", "R3"],
+        }
+    )
+    clean = clean_data(raw)
+    assert clean["product_id"].tolist() == ["A", "B"]
+    assert clean["rating_count"].iloc[0] == 1001
+    assert clean["n_reviews"].tolist() == [2, 1]
+
+    path = save_processed(clean, tmp_path / "clean.csv")
+    back = load_processed(path)
+    assert str(back["rating_count"].dtype) == "Int64"
+    assert pd.isna(back["rating_count"].iloc[1])
+    assert back["is_small_category"].dtype == bool
+    assert pd.isna(back["rating"].iloc[1])

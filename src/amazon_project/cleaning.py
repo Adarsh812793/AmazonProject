@@ -79,3 +79,38 @@ def split_category(df: pd.DataFrame, small_threshold: int = 5) -> pd.DataFrame:
     counts = out["main_category"].map(out["main_category"].value_counts())
     out["is_small_category"] = counts < small_threshold
     return out
+
+
+def add_review_count(df: pd.DataFrame) -> pd.DataFrame:
+    """Add ``n_reviews``: how many reviews are packed into each row.
+
+    Counted from ``review_id`` because review IDs never contain commas, so
+    splitting on commas is safe there (unlike titles and review text). The
+    review text columns are left untouched for now.
+    """
+    out = df.copy()
+    out["n_reviews"] = out["review_id"].str.count(",") + 1
+    return out
+
+
+def strip_whitespace(df: pd.DataFrame) -> pd.DataFrame:
+    """Remove leading/trailing spaces from every text column."""
+    out = df.copy()
+    for col in out.select_dtypes(include=["object", "string"]).columns:
+        out[col] = out[col].str.strip()
+    return out
+
+
+def clean_data(raw: pd.DataFrame) -> pd.DataFrame:
+    """Run every cleaning step in order and return the cleaned DataFrame.
+
+    Order matters: whitespace is trimmed and numbers converted first, then
+    duplicates are dropped (they need numeric rating_count), and only then
+    are category sizes counted, so duplicates cannot inflate them.
+    """
+    df = strip_whitespace(raw)
+    df = convert_numeric_columns(df)
+    df = drop_duplicate_products(df)
+    df = split_category(df)
+    df = add_review_count(df)
+    return df.reset_index(drop=True)
