@@ -37,8 +37,8 @@ Run by `amazon_project.cleaning.clean_data()` (walkthrough: `notebooks/02_data_c
 ## Workflow
 1. Project Setup — done
 2. Data Acquisition — done
-3. Data Preparation and Cleaning — done (pending PR merge)
-4. Exploratory Data Analysis
+3. Data Preparation and Cleaning — done
+4. Exploratory Data Analysis (next up)
 5. Data Visualization
 6. Findings and Conclusion
 7. Final Demonstration and Report
