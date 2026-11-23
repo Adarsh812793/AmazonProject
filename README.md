@@ -49,13 +49,23 @@ Run in `notebooks/03_exploratory_data_analysis.ipynb` with functions in `amazon_
    - Discount % vs Rating: -0.147 (very weak negative association).
    - Discount % vs Discounted Price: -0.367 (cheaper products receive slightly higher percentage discounts).
 
+## Data visualization
+Run in `notebooks/04_data_visualization.ipynb` with functions in `amazon_project.visualization`. Output figures saved to `reports/figures/`.
+
+1. **Price distributions:** Contrasts raw price right-skew (+4.30) with log10-scaled distribution.
+2. **Discounts & ratings:** Shows symmetric discount spread around 60% and tight clustering of customer ratings between 4.0 and 4.3 stars.
+3. **Outlier analysis:** Boxplots depicting Tukey 1.5 × IQR fences for prices and review counts.
+4. **Category comparisons:** Side-by-side boxplots comparing price variance, discount %, and ratings across major categories.
+5. **Correlation heatmap:** Lower-triangular Spearman rank correlation matrix across continuous features.
+6. **Bivariate relationships:** Scatter plots highlighting discount vs price association and independence of customer ratings from price tags.
+
 ## Workflow
 1. Project Setup — done
 2. Data Acquisition — done
 3. Data Preparation and Cleaning — done
 4. Exploratory Data Analysis — done
-5. Data Visualization (next up)
-6. Findings and Conclusion
+5. Data Visualization — done
+6. Findings and Conclusion (next up)
 7. Final Demonstration and Report
 
 Each stage is completed and approved before the next begins.
