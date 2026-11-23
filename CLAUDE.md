@@ -24,7 +24,7 @@ Rules of engagement:
 - Keep things simple; avoid unnecessary complexity or abstraction.
 - Keep documentation (README, this file, docstrings) current at every stage.
 
-Status: Stages 1, 2, and 3 merged. Stage 4 (Exploratory Data Analysis) done on branch `stage-4-eda`, awaiting user's PR/merge and approval before Stage 5.
+Status: Stages 1, 2, 3, and 4 merged. Stage 5 (Data Visualization) done on branch `stage-5-visualization`, awaiting PR and merge into `main`.
 
 Git workflow: one branch per stage (`stage-N-topic`); commit there and push; the user opens and merges the PR. Do not install `gh` or open/merge PRs.
 
@@ -115,3 +115,12 @@ Walkthrough in `notebooks/03_exploratory_data_analysis.ipynb`; reusable function
   - Price vs Rating: +0.077 (no relationship).
   - Discount % vs Rating: -0.147 (very weak negative correlation).
   - Discount % vs Discounted Price: -0.367 (cheaper items have moderately higher discount percentages).
+
+## Data Visualization (Stage 5)
+Walkthrough in `notebooks/04_data_visualization.ipynb`; reusable plotting routines in `src/amazon_project/visualization.py`. Exported charts saved to `reports/figures/`.
+- `01_price_distributions.png`: Raw right-skewed prices vs log10 transformation.
+- `02_discount_and_rating_distributions.png`: Symmetric discount percentages (median 60%) and left-skewed, concentrated customer ratings (4.0–4.3).
+- `03_outlier_boxplots.png`: Log-scale boxplots showing Tukey 1.5×IQR fences and luxury/viral outliers.
+- `04_category_comparisons.png`: Comparative boxplots of pricing, discounts, and ratings across major categories.
+- `05_correlation_heatmap.png`: Spearman rank correlation heatmap.
+- `06_bivariate_relationships.png`: Scatter plots for Discount % vs Price and Rating vs Price.
