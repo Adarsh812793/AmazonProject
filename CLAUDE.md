@@ -24,7 +24,7 @@ Rules of engagement:
 - Keep things simple; avoid unnecessary complexity or abstraction.
 - Keep documentation (README, this file, docstrings) current at every stage.
 
-Status: Stages 1 and 2 merged. Stage 3 (Data Preparation and Cleaning) done on branch `stage-3-data-cleaning`, awaiting user's PR/merge and approval before Stage 4.
+Status: Stages 1, 2, and 3 merged. Stage 4 (Exploratory Data Analysis) done on branch `stage-4-eda`, awaiting user's PR/merge and approval before Stage 5.
 
 Git workflow: one branch per stage (`stage-N-topic`); commit there and push; the user opens and merges the PR. Do not install `gh` or open/merge PRs.
 
@@ -100,3 +100,18 @@ File: `amazon.csv` (~4.7 MB, UTF-8). Source: Kaggle. Stored at `data/raw/amazon.
 - Review columns pack several reviews into one comma-separated cell, so each row is NOT one review; splitting needs care because review text itself contains commas.
 - Category mix is skewed: Electronics 526, Computers&Accessories 453, Home&Kitchen 448, OfficeProducts 31, and 5 categories with ≤2 rows each — treat tiny categories carefully in comparisons.
 - No sales, revenue, date, or quantity columns.
+
+## Exploratory Data Analysis (Stage 4)
+Walkthrough in `notebooks/03_exploratory_data_analysis.ipynb`; reusable functions in `src/amazon_project/analysis.py`.
+- **Univariate Magnitudes:**
+  - `discounted_price`: Median ₹799, Mean ₹3,125, IQR ₹1,460, Skew +4.30 (heavy right tail up to ₹77,990).
+  - `actual_price`: Median ₹1,650, Mean ₹5,448, IQR ₹3,410, Skew +4.43 (max ₹139,900).
+  - `discount_percentage`: Median 60.0%, Mean 56.4%, IQR 38.0%, Skew -0.24 (roughly symmetric).
+  - `rating`: Median 4.10, Mean 4.09, IQR 0.40, Skew -1.23 (clustered between 4.0 and 4.3).
+  - `rating_count`: Median 5,170, Mean 18,295, Skew +5.69, Kurtosis 40.24 (extreme long-tail up to 426,973).
+- **Outliers:** Evaluated via Tukey's 1.5 × IQR fences; 114 price outliers and 124 rating count outliers identified and kept for Stage 5 visualization.
+- **Category Comparison:** Electronics has the largest price spread (IQR ₹7,600, median ₹1,384); OfficeProducts offers low median discounts (5%) and lowest median price (₹178), but highest median rating (4.3).
+- **Correlations (Spearman Rank):**
+  - Price vs Rating: +0.077 (no relationship).
+  - Discount % vs Rating: -0.147 (very weak negative correlation).
+  - Discount % vs Discounted Price: -0.367 (cheaper items have moderately higher discount percentages).

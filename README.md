@@ -34,12 +34,27 @@ Run by `amazon_project.cleaning.clean_data()` (walkthrough: `notebooks/02_data_c
 5. Split `category` into `main_category`, `sub_category`, `leaf_category`; `is_small_category` marks main categories with fewer than 5 products.
 6. **Reviews:** only `review_id`/`user_id` split safely on commas. Review text stays raw; `n_reviews` (count from `review_id`) is added. Text-level review analysis is deferred.
 
+## Exploratory data analysis
+Run in `notebooks/03_exploratory_data_analysis.ipynb` with functions in `amazon_project.analysis`.
+
+1. **Magnitudes & Distributions:**
+   - Prices are heavily right-skewed (discounted price median ₹799 vs mean ₹3,125; skew +4.30).
+   - Discounts are widespread and roughly symmetric (median 60.0%, mean 56.4%).
+   - Ratings are left-skewed, clustering closely between 4.0 and 4.3 (median 4.10, mean 4.09).
+   - Rating count follows an extreme long tail (median 5,170, max 426,973; skew +5.69, kurtosis 40.24).
+2. **Outliers:** Tukey's 1.5 × IQR fences identify 114 price outliers (>₹4,911.5) and 124 rating count outliers (>38,391). They represent authentic luxury items and viral products, retained for visualization.
+3. **Categories:** Electronics has the largest price variance (median ₹1,384, IQR ₹7,600); OfficeProducts has low discounts (median 5%) and low prices (median ₹178), but high ratings (median 4.3).
+4. **Correlations (Spearman Rank):**
+   - Price vs Rating: +0.077 (no meaningful relationship).
+   - Discount % vs Rating: -0.147 (very weak negative association).
+   - Discount % vs Discounted Price: -0.367 (cheaper products receive slightly higher percentage discounts).
+
 ## Workflow
 1. Project Setup — done
 2. Data Acquisition — done
 3. Data Preparation and Cleaning — done
-4. Exploratory Data Analysis (next up)
-5. Data Visualization
+4. Exploratory Data Analysis — done
+5. Data Visualization (next up)
 6. Findings and Conclusion
 7. Final Demonstration and Report
 
